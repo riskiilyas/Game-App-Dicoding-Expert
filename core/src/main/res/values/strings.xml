@@ -1,0 +1,5 @@
+<resources>
+    <string name="title_favorite">Favorite</string>
+    <string name="game_image">Game Image</string>
+    <string name="delete_item">Delete Item</string>
+</resources>

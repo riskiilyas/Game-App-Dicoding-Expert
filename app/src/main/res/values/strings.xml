@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Game App by Riski</string>
+    <string name="add_to_favorites">Add to Favorites</string>
+    <string name="add_to_favorite">Add To Favorite</string>
+    <string name="play_now">Play Now</string>
+    <string name="game_image">Game Image</string>
+    <string name="delete_item">Delete Item</string>
+    <string name="refresh">Refresh</string>
+</resources>
