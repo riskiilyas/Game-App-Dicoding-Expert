@@ -2,21 +2,21 @@ package com.riskee.gameappbyriski.home
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.lifecycleScope
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.riskee.gameappbyriski.R
 import com.riskee.gameappbyriski.core.data.Resource
 import com.riskee.gameappbyriski.core.ui.GameAdapter
 import com.riskee.gameappbyriski.databinding.ActivityMainBinding
 import com.riskee.gameappbyriski.detail.DetailActivity
-import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: MainViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -25,39 +25,40 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        lifecycleScope.launch {
-            viewModel.gamesState.collect {
-                when(it) {
-                    is Resource.LOADING -> {
-                        binding.rvGame.visibility = View.GONE
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-                    is Resource.SUCCESS -> {
-                        binding.rvGame.visibility = View.VISIBLE
-                        binding.progressBar.visibility = View.GONE
-                        binding.rvGame.adapter = GameAdapter(it.result) { game ->
-                            val detailIntent = Intent(this@MainActivity, DetailActivity::class.java)
-                            detailIntent.putExtra(DetailActivity.ID_GAME, game.id)
-                            startActivity(detailIntent)
-                        }
-                    }
-                    is Resource.ERROR -> {
-                        binding.rvGame.visibility = View.VISIBLE
-                        binding.progressBar.visibility = View.GONE
-                    }
-
-                    else -> {}
+        viewModel.gamesState.observe(this) {
+            when (it) {
+                is Resource.LOADING -> {
+                    binding.rvGame.visibility = View.GONE
+                    binding.progressBar.visibility = View.VISIBLE
                 }
+
+                is Resource.SUCCESS -> {
+                    binding.rvGame.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
+                    binding.rvGame.adapter = GameAdapter(it.result) { game ->
+                        val detailIntent = Intent(this@MainActivity, DetailActivity::class.java)
+                        detailIntent.putExtra(DetailActivity.ID_GAME, game.id)
+                        startActivity(detailIntent)
+                    }
+                }
+
+                is Resource.ERROR -> {
+                    binding.rvGame.visibility = View.VISIBLE
+                    binding.progressBar.visibility = View.GONE
+                }
+
+                else -> {}
             }
         }
 
         binding.toolbar.setOnMenuItemClickListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.action_add_favorite -> {
                     val uri = Uri.parse("gameappbyriski://favorite")
                     startActivity(Intent(Intent.ACTION_VIEW, uri))
                     true
                 }
+
                 else -> {
                     false
                 }

@@ -1,7 +1,6 @@
 package com.riskee.gameappbyriski.core.domain.usecase
 
 import com.riskee.gameappbyriski.core.data.Resource
-import com.riskee.gameappbyriski.core.data.datasource.local.dao.GameDetailDao
 import com.riskee.gameappbyriski.core.domain.model.DetailGame
 import com.riskee.gameappbyriski.core.domain.model.Game
 import kotlinx.coroutines.flow.Flow

@@ -1,4 +1,4 @@
-package com.riskee.gameappbyriski.detail
+package com.riskee.gameappbyriski.favorite.detail_favorite
 
 import android.content.Intent
 import android.net.Uri
@@ -10,33 +10,50 @@ import coil.load
 import com.riskee.gameappbyriski.ImageSliderFragment
 import com.riskee.gameappbyriski.R
 import com.riskee.gameappbyriski.core.data.Resource
-import com.riskee.gameappbyriski.databinding.ActivityDetailBinding
-import dagger.hilt.android.AndroidEntryPoint
+import com.riskee.gameappbyriski.databinding.ActivityDetailFavoriteBinding
+import com.riskee.gameappbyriski.di.DaggerModuleFavoriteDetail
+import com.riskee.gameappbyriski.di.FavoriteModuleInterface
+import com.riskee.gameappbyriski.favorite.ViewModelFactory
+import dagger.hilt.android.EntryPointAccessors
+import javax.inject.Inject
 
-@AndroidEntryPoint
-class DetailActivity : AppCompatActivity() {
+class DetailFavoriteActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDetailFavoriteBinding
 
-    private val viewModel: DetailViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
 
-    private var _binding: ActivityDetailBinding? = null
-    private val binding get() = _binding!!
+    private val viewModel: DetailFavoriteViewModel by viewModels {
+        viewModelFactory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        _binding = ActivityDetailBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val gameId = intent.getIntExtra(ID_GAME, 0)
+        DaggerModuleFavoriteDetail.builder()
+            .context(this)
+            .appDependencies(
+                EntryPointAccessors.fromApplication(
+                    applicationContext,
+                    FavoriteModuleInterface::class.java
+                )
+            )
+            .build()
+            .inject(this)
 
-        viewModel.detailGameState.observe(this) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityDetailFavoriteBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+        val id = intent.getIntExtra(ID_GAME, 0)
+
+        viewModel.detailGameFlow.observe(this) {
             when (it) {
                 is Resource.LOADING -> {
-                    binding.fabFav.visibility = View.GONE
                     binding.progressBar.visibility = View.VISIBLE
                     binding.playButton.visibility = View.GONE
                 }
 
                 is Resource.SUCCESS -> {
-                    binding.fabFav.visibility = View.VISIBLE
                     binding.progressBar.visibility = View.GONE
                     binding.playButton.visibility = View.VISIBLE
                     val fragment = ImageSliderFragment(it.result.screenshots)
@@ -49,22 +66,19 @@ class DetailActivity : AppCompatActivity() {
                     binding.platform.text = it.result.platform
                     binding.shortDescription.text = it.result.shortDescription
                     binding.status.text = it.result.status
+
                     binding.thumbnail.load(Uri.parse(it.result.thumbnail))
+
                     binding.title.text = it.result.title
 
                     binding.playButton.setOnClickListener { _ ->
-                        val intent =
-                            Intent(Intent.ACTION_VIEW, Uri.parse(it.result.gameUrl))
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it.result.gameUrl))
                         startActivity(intent)
                     }
 
-                    binding.fabFav.setOnClickListener { _ ->
-                        viewModel.addFavoriteGame(it.result)
-                    }
                 }
 
                 is Resource.ERROR -> {
-                    binding.fabFav.visibility = View.GONE
                     binding.progressBar.visibility = View.GONE
                     binding.playButton.visibility = View.GONE
                 }
@@ -73,22 +87,10 @@ class DetailActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.insertState.observe(this) {
-            if (it) {
-                binding.fabFav.visibility = View.GONE
-            }
-        }
-
-
-        viewModel.getDetailGame(gameId)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+        viewModel.getDetailFavoriteGame(id)
     }
 
     companion object {
-        const val ID_GAME = "ID"
+        const val ID_GAME: String = "ID"
     }
 }

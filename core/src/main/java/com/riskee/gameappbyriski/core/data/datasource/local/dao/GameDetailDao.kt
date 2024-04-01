@@ -1,7 +1,6 @@
 package com.riskee.gameappbyriski.core.data.datasource.local.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,7 +10,6 @@ import androidx.room.Transaction
 import com.riskee.gameappbyriski.core.data.datasource.local.entity.DetailGameEntity
 import com.riskee.gameappbyriski.core.data.datasource.local.entity.MinimumSystemRequirementsEntity
 import com.riskee.gameappbyriski.core.data.datasource.local.entity.ScreenshotEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface GameDetailDao {

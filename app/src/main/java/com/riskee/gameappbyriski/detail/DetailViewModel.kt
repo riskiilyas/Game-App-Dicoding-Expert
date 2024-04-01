@@ -1,34 +1,37 @@
 package com.riskee.gameappbyriski.detail
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.riskee.gameappbyriski.core.data.Resource
 import com.riskee.gameappbyriski.core.domain.model.DetailGame
 import com.riskee.gameappbyriski.core.domain.usecase.GameUseCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailViewModel(private val gameUseCase: GameUseCase) : ViewModel() {
+@HiltViewModel
+class DetailViewModel @Inject constructor(private val gameUseCase: GameUseCase) : ViewModel() {
 
-    private val _detailGameState = MutableStateFlow<Resource<DetailGame>>(Resource.INIT())
-    val detailGameState: StateFlow<Resource<DetailGame>> = _detailGameState
+    private val _detailGameState = MutableLiveData<Resource<DetailGame>>(Resource.INIT())
+    val detailGameState: LiveData<Resource<DetailGame>> = _detailGameState
 
-    private val _insertState = MutableStateFlow(false)
-    val insertState: StateFlow<Boolean> = _insertState
+    private val _insertState = MutableLiveData(false)
+    val insertState: LiveData<Boolean> = _insertState
 
     fun getDetailGame(id: Int) {
         viewModelScope.launch {
             gameUseCase.getDetailGame(id).collect { resource ->
-                _detailGameState.value = resource
+                _detailGameState.postValue(resource)
             }
         }
     }
 
     fun addFavoriteGame(game: DetailGame) {
         viewModelScope.launch {
-            _insertState.value = gameUseCase.insertFavoriteGame(game)
+            _insertState.postValue(gameUseCase.insertFavoriteGame(game))
         }
     }
+
 }

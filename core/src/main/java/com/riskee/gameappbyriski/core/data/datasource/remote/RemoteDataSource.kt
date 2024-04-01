@@ -2,8 +2,6 @@ package com.riskee.gameappbyriski.core.data.datasource.remote
 
 import com.riskee.gameappbyriski.core.data.Resource
 import com.riskee.gameappbyriski.core.data.datasource.remote.network.APIService
-import com.riskee.gameappbyriski.core.data.datasource.remote.response.DetailGameResponse
-import com.riskee.gameappbyriski.core.data.datasource.remote.response.GameResponse
 import com.riskee.gameappbyriski.core.domain.model.DetailGame
 import com.riskee.gameappbyriski.core.domain.model.Game
 import com.riskee.gameappbyriski.core.utils.ResponseToModelMapper

@@ -20,9 +20,12 @@ class GameRepositoryImpl(
 
     override fun getAllFavoriteGames(): Flow<Resource<List<Game>>> = localDataSource.getAllGames()
 
-    override fun getDetailFavoriteGame(id: Int): Flow<Resource<DetailGame>> = localDataSource.getDetailGame(id)
+    override fun getDetailFavoriteGame(id: Int): Flow<Resource<DetailGame>> =
+        localDataSource.getDetailGame(id)
 
-    override suspend fun insertFavoriteGame(game: DetailGame): Boolean = localDataSource.insertFavoriteGame(game)
+    override suspend fun insertFavoriteGame(game: DetailGame): Boolean =
+        localDataSource.insertFavoriteGame(game)
 
-    override suspend fun deleteFavoriteGame(game: Game): Boolean = localDataSource.deleteFavoriteGame(game)
+    override suspend fun deleteFavoriteGame(game: Game): Boolean =
+        localDataSource.deleteFavoriteGame(game)
 }

@@ -100,27 +100,16 @@
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/screenshotTabLayout"
+            app:layout_constraintTop_toBottomOf="@id/fragmentContainer"
             tools:text="Detailed description of the game." />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/screenshotViewPager"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shortDescription" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/screenshotTabLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/screenshotViewPager"
-            app:layout_constraintStart_toStartOf="@+id/screenshotViewPager"
-            app:layout_constraintTop_toBottomOf="@+id/screenshotViewPager" />
 
         <Button
             android:id="@+id/playButton"
