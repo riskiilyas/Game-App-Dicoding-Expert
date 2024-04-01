@@ -1,22 +1,16 @@
 version: 2.1
  
 orbs:
-  android: circleci/android@0.2.1
+  android: circleci/android@2.5.0
  
 jobs:
   build:
-    executor: android/android
+    docker:
+      - image: cimg/android:2024.01.1-browsers
     steps:
       - checkout
       - restore_cache:
-        key: android-orb-v1-
-      - run:
-          name: Install OpenJDK 17
-          command: |
-            sudo apt-get update && sudo apt-get install openjdk-17-jdk
-            sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java
-            sudo update-alternatives --set javac /usr/lib/jvm/java-17-openjdk-amd64/bin/javac
-            java -version
+          key: android-orb-v1-
       - run:
           name: Chmod permissions
           command: sudo chmod +x ./gradlew
